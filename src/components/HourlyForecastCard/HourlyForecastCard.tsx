@@ -1,6 +1,26 @@
 import { View, Text, Image } from 'react-native';
 
-export default function HourlyForecastCard({ hourData }) {
+interface HourlyCondition {
+	icon?: string;
+	text?: string;
+}
+
+interface HourData {
+	time: string;
+	temp_c?: number;
+	condition?: HourlyCondition;
+	wind_kph?: number;
+	precip_mm?: number;
+	humidity?: number;
+}
+
+interface HourlyForecastCardProps {
+	hourData: HourData;
+}
+
+export default function HourlyForecastCard({
+	hourData,
+}: HourlyForecastCardProps) {
 	return (
 		<View
 			style={{ minWidth: 163, maxWidth: 193 }}

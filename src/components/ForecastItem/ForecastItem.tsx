@@ -2,16 +2,35 @@ import { theme } from '@/theme/theme';
 import { useNavigation } from '@react-navigation/native';
 import { Image, Text, TouchableOpacity } from 'react-native';
 
-export default function ForecastItem({ item }) {
+type Condition = {
+	icon: string;
+	text: string;
+};
+
+type Day = {
+	maxtemp_c: number;
+	mintemp_c: number;
+	condition: Condition;
+};
+
+type ForecastItemProps = {
+	item: {
+		date: string;
+		day: Day;
+	};
+};
+
+export default function ForecastItem({ item }: ForecastItemProps) {
 	const navigation = useNavigation();
 	let dayName = new Date(item.date).toLocaleDateString('en-US', {
 		weekday: 'long',
 	});
 	dayName = dayName.split(',')[0];
+
 	return (
 		<TouchableOpacity
 			onPress={() => {
-				navigation.navigate('Detail',{forecastDetails: item});
+				navigation.navigate('Detail', { forecastDetails: item });
 			}}
 			className="flex justify-center items-center w-24 rounded-2xl py-4 space-y-2 mr-4"
 			style={{ backgroundColor: theme.white(0.15) }}

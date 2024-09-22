@@ -1,13 +1,12 @@
 import { View, Text, ScrollView, Image, StatusBar } from 'react-native';
-import { weatherImages } from '@/services/constants'; // Assuming you have weather images
 import { useRoute } from '@react-navigation/native';
 import { AstroCard, ForecastCard, HourlyForecastCard } from '@/components';
+import { ForecastDay } from '@/types/types';
 
 function DetailsScreen() {
 	const route = useRoute();
-	console.log('route', route.params);
 
-	const { forecastDetails }= route.params; // The forecast details passed from the Home screen
+	const { forecastDetails } = route.params as { forecastDetails: ForecastDay };
 
 	const { day, astro, hour } = forecastDetails;
 
@@ -31,7 +30,11 @@ function DetailsScreen() {
 				<AstroCard astro={astro} />
 
 				{/* Hourly Forecast */}
-				<ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-6">
+				<ScrollView
+					horizontal
+					showsHorizontalScrollIndicator={false}
+					className="mb-6"
+				>
 					{hour?.map((hourData, index) => (
 						<HourlyForecastCard key={index} hourData={hourData} />
 					))}

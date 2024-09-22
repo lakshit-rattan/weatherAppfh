@@ -20,14 +20,15 @@ import { fetchWeatherForecast } from '@/services/api';
 import { weatherImages } from '@/services/constants';
 import { ForecastItem, ForecastProp, SearchBar } from '@/components';
 import { storage } from '@/storage';
+import { WeatherData } from '@/types/types';
 
 function HomeScreen() {
-	const [weather, setWeather] = useState({});
+	const [weather, setWeather] = useState<WeatherData | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [days, setDays] = useState(3);
-	const { current, location } = weather;
+	const { current, location } = weather || {};
 
-	const fetchData = async (dayCount = 3, cityName) => {
+	const fetchData = async (dayCount: number = 3, cityName?: string) => {
 		try {
 			const myCity = cityName || storage.getString('city') || 'Noida';
 			const data = await fetchWeatherForecast({
@@ -50,7 +51,7 @@ function HomeScreen() {
 		fetchData();
 	}, []);
 
-	const handleDayChange = day => {
+	const handleDayChange = (day: number) => {
 		setDays(day);
 		setIsLoading(true); // show loader while new data is fetched
 		fetchData(day, location?.name);
@@ -67,7 +68,6 @@ function HomeScreen() {
 	// 			console.log('err', err);
 	// 		});
 	// };
-
 	return (
 		<View className="flex-1 relative bg-black">
 			<StatusBar barStyle="light-content" />
@@ -96,14 +96,14 @@ function HomeScreen() {
 									{' ' + location?.country}
 								</Text>
 							</Text>
-							{/* weather Image */}
+							{/* Weather Image */}
 							<View className="flex-row justify-center">
 								<Image
 									source={weatherImages[current?.condition?.text]}
 									className="h-52 w-52"
 								/>
 							</View>
-							{/* degree celsius */}
+							{/* Degree Celsius */}
 							<View className="space-y-2 ">
 								<Text className="text-center font-bold text-white text-6xl ml-5">
 									{current?.temp_c}°
@@ -119,7 +119,7 @@ function HomeScreen() {
 						<View className="mb-6 space-y-3">
 							<View className="flex-row justify-between">
 								<View className="flex-row items-center mx-5 space-x-2">
-									<CalendarDaysIcon size="22" color="white" />
+									<CalendarDaysIcon size={22} color="white" />
 									<Text className="text-white text-base"> Daily forecast</Text>
 								</View>
 								<View className="flex-row items-center justify-center mr-2">
@@ -128,7 +128,7 @@ function HomeScreen() {
 										onPress={() => handleDayChange(days - 1)}
 									>
 										<MinusCircleIcon
-											size="22"
+											size={22}
 											color={days === 3 ? 'gray' : 'white'}
 										/>
 									</TouchableOpacity>
@@ -138,7 +138,7 @@ function HomeScreen() {
 										onPress={() => handleDayChange(days + 1)}
 									>
 										<PlusCircleIcon
-											size="22"
+											size={22}
 											color={days === 10 ? 'gray' : 'white'}
 										/>
 									</TouchableOpacity>

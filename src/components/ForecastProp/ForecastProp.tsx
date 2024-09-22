@@ -1,7 +1,24 @@
 import { View, Text, Image } from 'react-native';
-import React from 'react';
 
-export default function ForecastProp({ weather }) {
+interface Weather {
+	current?: {
+		wind_kph?: number;
+		humidity?: number;
+	};
+	forecast?: {
+		forecastday?: Array<{
+			astro?: {
+				sunrise?: string;
+			};
+		}>;
+	};
+}
+
+interface ForecastPropProps {
+	weather: Weather;
+}
+
+export default function ForecastProp({ weather }: ForecastPropProps) {
 	return (
 		<View className="flex-row justify-between mx-4">
 			<View className="flex-row space-x-2 items-center">
@@ -28,7 +45,7 @@ export default function ForecastProp({ weather }) {
 					className="h-6 w-6"
 				/>
 				<Text className="text-white font-semibold text-base">
-					{weather?.forecast?.forecastday[0]?.astro?.sunrise}
+					{weather?.forecast?.forecastday?.[0]?.astro?.sunrise}
 				</Text>
 			</View>
 		</View>

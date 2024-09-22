@@ -1,8 +1,24 @@
-// components/ForecastCard.js
-import React from 'react';
 import { View, Text } from 'react-native';
 
-function ForecastCard({ day }) {
+type Condition = {
+	text: string;
+};
+
+type Day = {
+	maxtemp_c: number;
+	mintemp_c: number;
+	avgtemp_c: number;
+	condition: Condition;
+	maxwind_kph: number;
+	totalprecip_mm: number;
+	uv: number;
+};
+
+type ForecastCardProps = {
+	day: Day;
+};
+
+function ForecastCard({ day }: ForecastCardProps) {
 	return (
 		<View className="bg-gray-900 p-4 rounded-lg mb-4">
 			<Text className="text-white text-3xl mb-2">Day Overview</Text>
