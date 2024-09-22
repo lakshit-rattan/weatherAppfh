@@ -8,8 +8,14 @@ import {
 	SafeAreaView,
 	KeyboardAvoidingView,
 	ActivityIndicator,
+	TouchableOpacity,
+	Alert,
 } from 'react-native';
 import { CalendarDaysIcon } from 'react-native-heroicons/solid';
+import {
+	PlusCircleIcon,
+	MinusCircleIcon,
+} from 'react-native-heroicons/outline';
 import { fetchWeatherForecast } from '@/services/api';
 import { weatherImages } from '@/services/constants';
 import { ForecastItem, ForecastProp, SearchBar } from '@/components';
@@ -18,24 +24,49 @@ import { storage } from '@/storage';
 function HomeScreen() {
 	const [weather, setWeather] = useState({});
 	const [isLoading, setIsLoading] = useState(true);
+	const [days, setDays] = useState(3);
 	const { current, location } = weather;
 
-	useEffect(() => {
-		const fetchData = async () => {
-			const myCity = storage.getString('city');
-			const cityName = myCity ? myCity : 'Noida';
-			return fetchWeatherForecast({ cityName, days: 3 })
-				.then(data => {
-					setWeather(data);
-					setIsLoading(false);
-				})
-				.catch(err => {
-					console.log('err', err);
-				});
-		};
+	const fetchData = async (dayCount = 3, cityName) => {
+		try {
+			const myCity = cityName || storage.getString('city') || 'Noida';
+			const data = await fetchWeatherForecast({
+				cityName: myCity,
+				days: dayCount,
+			});
+			setWeather(data);
+		} catch (err) {
+			Alert.alert(
+				'Alert',
+				'Error fetching Forecast data. Please restart the app.',
+				[{ text: 'Continue' }],
+			);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
+	useEffect(() => {
 		fetchData();
 	}, []);
+
+	const handleDayChange = day => {
+		setDays(day);
+		setIsLoading(true); // show loader while new data is fetched
+		fetchData(day, location?.name);
+	};
+
+	// const handleDayChange = day => {
+	// 	setDays(day);
+	// 	fetchWeatherForecast({ cityName: location?.name, days: day })
+	// 		.then(data => {
+	// 			setWeather(data);
+	// 			setIsLoading(false);
+	// 		})
+	// 		.catch(err => {
+	// 			console.log('err', err);
+	// 		});
+	// };
 
 	return (
 		<View className="flex-1 relative bg-black">
@@ -52,9 +83,7 @@ function HomeScreen() {
 			) : (
 				<KeyboardAvoidingView className="flex flex-1">
 					<SafeAreaView className="flex flex-1">
-						{/* <SearchBar /> */}
 						<SearchBar setWeather={setWeather} setIsLoading={setIsLoading} />
-						{/* Forecast section */}
 						<View className="mx-4 flex justify-around flex-1 mb-2">
 							{/* Location */}
 							<Text className="text-white text-center text-2xl font-bold">
@@ -79,28 +108,46 @@ function HomeScreen() {
 									{current?.condition?.text}
 								</Text>
 							</View>
-							{/* other stats */}
 							<ForecastProp weather={weather} />
 						</View>
 
-						{/* Forecast section for our next days */}
+						{/* Forecast section for next days */}
 						<View className="mb-6 space-y-3">
 							<View className="flex-row justify-between">
 								<View className="flex-row items-center mx-5 space-x-2">
 									<CalendarDaysIcon size="22" color="white" />
 									<Text className="text-white text-base"> Daily forecast</Text>
 								</View>
-								<Text className="text-white text-xl mr-2"> - 3 days +</Text>
+								<View className="flex-row items-center justify-center mr-2">
+									<TouchableOpacity
+										disabled={days === 3}
+										onPress={() => handleDayChange(days - 1)}
+									>
+										<MinusCircleIcon
+											size="22"
+											color={days === 3 ? 'gray' : 'white'}
+										/>
+									</TouchableOpacity>
+									<Text className="text-white text-lg mr-1"> {days} days</Text>
+									<TouchableOpacity
+										disabled={days === 10}
+										onPress={() => handleDayChange(days + 1)}
+									>
+										<PlusCircleIcon
+											size="22"
+											color={days === 10 ? 'gray' : 'white'}
+										/>
+									</TouchableOpacity>
+								</View>
 							</View>
 							<ScrollView
 								horizontal
 								contentContainerStyle={{ paddingHorizontal: 15 }}
 								showsHorizontalScrollIndicator={false}
 							>
-								{/* Cards */}
-								{weather?.forecast?.forecastday.map((item, index) => {
-									return <ForecastItem key={index} item={item} />;
-								})}
+								{weather?.forecast?.forecastday.map((item, index) => (
+									<ForecastItem key={index} item={item} />
+								))}
 							</ScrollView>
 						</View>
 					</SafeAreaView>
