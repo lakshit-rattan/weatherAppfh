@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { CommonActions } from '@react-navigation/native';
 
 import { useTheme } from '@/theme';
-import { Brand } from '@/components/molecules';
-import { SafeScreen } from '@/components/template';
+// import { Brand } from '@/components/molecules';
+// import { SafeScreen } from '@/components/template';
 
-import type { RootScreenProps } from '@/types/navigation';
+// import type { RootScreenProps } from '@/types/navigation';
 
 function Startup({ navigation }: RootScreenProps<'Startup'>) {
 	const { layout, gutters, fonts } = useTheme();
