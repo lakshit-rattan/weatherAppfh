@@ -17,7 +17,6 @@ export default function SearchBar({ setWeather, setIsLoading, setDays }) {
 	};
 
 	const handleLocation = loc => {
-		console.log('location', loc);
 		setLocations([]);
 		setDays(3);
 		toggleSearch();
@@ -40,7 +39,6 @@ export default function SearchBar({ setWeather, setIsLoading, setDays }) {
 				cityName: value,
 			})
 				.then(res => {
-					console.log('got res', res);
 					if (res.length === 0) {
 						Alert.alert('Alert', 'No locations found', [{ text: 'Continue' }]);
 						return;
