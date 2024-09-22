@@ -83,7 +83,11 @@ function HomeScreen() {
 			) : (
 				<KeyboardAvoidingView className="flex flex-1">
 					<SafeAreaView className="flex flex-1">
-						<SearchBar setWeather={setWeather} setIsLoading={setIsLoading} />
+						<SearchBar
+							setWeather={setWeather}
+							setIsLoading={setIsLoading}
+							setDays={setDays}
+						/>
 						<View className="mx-4 flex justify-around flex-1 mb-2">
 							{/* Location */}
 							<Text className="text-white text-center text-2xl font-bold">

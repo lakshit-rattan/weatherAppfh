@@ -7,7 +7,7 @@ import { MagnifyingGlassIcon } from 'react-native-heroicons/outline';
 import { theme } from '@/theme/theme';
 import { storage } from '@/storage';
 
-export default function SearchBar({ setWeather, setIsLoading }) {
+export default function SearchBar({ setWeather, setIsLoading, setDays }) {
 	const [showSearch, setShowSearch] = useState(false);
 	const [locations, setLocations] = useState([]);
 
@@ -19,6 +19,7 @@ export default function SearchBar({ setWeather, setIsLoading }) {
 	const handleLocation = loc => {
 		console.log('location', loc);
 		setLocations([]);
+		setDays(3);
 		toggleSearch();
 		setIsLoading(true);
 		fetchWeatherForecast({ cityName: loc.name, days: 3 })

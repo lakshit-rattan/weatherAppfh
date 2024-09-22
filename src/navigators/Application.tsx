@@ -19,11 +19,7 @@ function ApplicationNavigator() {
 					{/* <Stack.Screen name="Startup" component={Startup} />
 					<Stack.Screen name="Example" component={Example} /> */}
 					<Stack.Screen name="Home" component={Home} />
-					<Stack.Screen
-						name="Detail"
-						component={Detail}
-						options={{ headerShown: true }}
-					/>
+					<Stack.Screen name="Detail" component={Detail} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</SafeAreaProvider>

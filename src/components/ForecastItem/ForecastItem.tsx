@@ -11,7 +11,7 @@ export default function ForecastItem({ item }) {
 	return (
 		<TouchableOpacity
 			onPress={() => {
-				navigation.navigate('Detail');
+				navigation.navigate('Detail',{forecastDetails: item});
 			}}
 			className="flex justify-center items-center w-24 rounded-2xl py-4 space-y-2 mr-4"
 			style={{ backgroundColor: theme.white(0.15) }}
