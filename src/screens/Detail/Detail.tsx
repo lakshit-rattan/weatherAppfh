@@ -1,4 +1,11 @@
-import { View, Text, ScrollView, Image, StatusBar } from 'react-native';
+import {
+	View,
+	Text,
+	ScrollView,
+	Image,
+	StatusBar,
+	Platform,
+} from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { AstroCard, ForecastCard, HourlyForecastCard } from '@/components';
 import { ForecastDay } from '@/types/types';
@@ -19,7 +26,10 @@ function DetailsScreen() {
 				className="w-full h-full absolute"
 			/>
 			<View className="flex-1 p-3">
-				<View className="mb-6">
+				<View
+					style={Platform.OS === 'ios' ? { marginTop: 50 } : undefined}
+					className="mb-6"
+				>
 					<Text className="text-white text-2xl font-bold text-center">
 						Weather Details for {forecastDetails.date}
 					</Text>
