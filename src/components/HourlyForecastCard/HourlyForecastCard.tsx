@@ -1,3 +1,4 @@
+import { stringTruncate } from '@/services/constants';
 import { View, Text, Image } from 'react-native';
 
 interface HourlyCondition {
@@ -22,7 +23,7 @@ export default function HourlyForecastCard({
 	hourData,
 }: HourlyForecastCardProps) {
 	return (
-		<View className="bg-gray-800 p-4 justify-center rounded-lg mx-2 w-44 min-h-50">
+		<View className="bg-gray-800 p-4 justify-center rounded-lg mx-2 w-44 min-h-60">
 			<Text className="text-white text-2xl mb-2 font-bold text-center">
 				{hourData.time.split(' ')[1]}
 			</Text>
@@ -31,14 +32,12 @@ export default function HourlyForecastCard({
 				className="w-20 h-20 mx-auto"
 				resizeMode="contain"
 			/>
-			<Text className="text-white mb-1">• Temp: {hourData.temp_c}°</Text>
-			<Text className="text-white mb-1">
-				• Condition: {hourData?.condition?.text}
+			<Text className="text-white mb-0.5">• Temp: {hourData.temp_c}°</Text>
+			<Text className="text-white mb-0.5">
+				• {stringTruncate(hourData?.condition?.text || '', 15)}
 			</Text>
-			<Text className="text-white mb-1">• Wind: {hourData?.wind_kph} kph</Text>
-			<Text className="text-white mb-1">
-				• Precipitation: {hourData?.precip_mm} mm
-			</Text>
+			<Text className="text-white mb-0.5">• Wind: {hourData?.wind_kph} kph</Text>
+			<Text className="text-white mb-0.5">• Prcp: {hourData?.precip_mm} mm</Text>
 			<Text className="text-white">• Humidity: {hourData?.humidity}%</Text>
 		</View>
 	);

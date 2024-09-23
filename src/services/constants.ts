@@ -18,3 +18,12 @@ export const weatherImages = {
 	'Patchy rain nearby': require('../theme/assets/images/moderaterain.png'),
 	'Mist': require('../theme/assets/images/mist.png'),
 };
+
+export const stringTruncate = (
+	string: string | undefined,
+	maxLength: number = 10,
+): string => {
+	if (!string) return '';
+	const isTruncate = string.length > maxLength;
+	return isTruncate ? `${string.substring(0, maxLength)}...` : string;
+};
