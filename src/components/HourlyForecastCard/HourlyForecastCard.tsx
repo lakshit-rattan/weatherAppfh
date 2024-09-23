@@ -23,8 +23,8 @@ export default function HourlyForecastCard({
 	hourData,
 }: HourlyForecastCardProps) {
 	return (
-		<View className="bg-gray-800 p-4 justify-center rounded-lg mx-2 w-44 min-h-60">
-			<Text className="text-white text-2xl mb-2 font-bold text-center">
+		<View className="bg-gray-800 p-4 justify-center rounded-lg mx-2 w-44 min-h-50">
+			<Text className="text-white text-2xl mb-1 font-bold text-center">
 				{hourData.time.split(' ')[1]}
 			</Text>
 			<Image
