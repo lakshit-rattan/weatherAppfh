@@ -69,12 +69,16 @@ function HomeScreen() {
 	// 		});
 	// };
 	return (
-		<View className="flex-1 relative bg-black">
+		<ScrollView
+			contentContainerStyle={{ flexGrow: 1 }}
+			className="flex-1 relative bg-black"
+		>
 			<StatusBar barStyle="light-content" />
 			<Image
 				blurRadius={70}
 				source={require('../../theme/assets/images/bg.png')}
 				className="w-full h-full absolute"
+				resizeMode="cover"
 			/>
 			{isLoading ? (
 				<View className="flex-1 flex-row justify-center items-center">
@@ -157,7 +161,7 @@ function HomeScreen() {
 					</SafeAreaView>
 				</KeyboardAvoidingView>
 			)}
-		</View>
+		</ScrollView>
 	);
 }
 

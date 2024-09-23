@@ -18,7 +18,7 @@ function DetailsScreen() {
 	const { day, astro, hour } = forecastDetails;
 
 	return (
-		<View className="flex-1">
+		<ScrollView className="flex-1">
 			<StatusBar barStyle="light-content" />
 			<Image
 				blurRadius={70}
@@ -50,7 +50,7 @@ function DetailsScreen() {
 					))}
 				</ScrollView>
 			</View>
-		</View>
+		</ScrollView>
 	);
 }
 
