@@ -27,7 +27,7 @@ export default function ForecastProp({ weather }: ForecastPropProps) {
 					className="h-6 w-6"
 				/>
 				<Text className="text-white font-semibold text-base">
-					{weather.current?.wind_kph}km
+					{weather?.current?.wind_kph}km
 				</Text>
 			</View>
 			<View className="flex-row space-x-2 items-center">
@@ -36,7 +36,7 @@ export default function ForecastProp({ weather }: ForecastPropProps) {
 					className="h-6 w-6"
 				/>
 				<Text className="text-white font-semibold text-base">
-					{weather.current?.humidity}%
+					{weather?.current?.humidity}%
 				</Text>
 			</View>
 			<View className="flex-row space-x-2 items-center">

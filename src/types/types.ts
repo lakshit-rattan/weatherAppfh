@@ -51,8 +51,6 @@ export interface WeatherData {
 }
 
 export interface SearchBarProps {
-	setWeather: (data: WeatherData) => void;
-	setIsLoading: (loading: boolean) => void;
 	setDays: (days: number) => void;
 }
 

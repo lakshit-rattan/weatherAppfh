@@ -1,56 +1,44 @@
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import {
+	View,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	ScrollView,
+} from 'react-native';
 import { useCallback, useState } from 'react';
-import { fetchLocations, fetchWeatherForecast } from '@/services/api/api';
 import { debounce } from 'lodash';
 import { MapPinIcon } from 'react-native-heroicons/solid';
 import { MagnifyingGlassIcon } from 'react-native-heroicons/outline';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { fetchLocations, fetchWeather } from '@/redux/actions/weatherActions';
 import { theme } from '@/theme/theme';
-import { storage } from '@/storage';
-import { Location, SearchBarProps } from '@/types/types';
+import { SearchBarProps } from '@/types/types';
 
 // eslint-disable-next-line react/function-component-definition
-const SearchBar: React.FC<SearchBarProps> = ({
-	setWeather,
-	setIsLoading,
-	setDays,
-}) => {
+const SearchBar: React.FC<SearchBarProps> = ({ setDays }) => {
+	const dispatch = useDispatch();
 	const [showSearch, setShowSearch] = useState<boolean>(false);
-	const [locations, setLocations] = useState<Location[]>([]);
+	const [inputValue, setInputValue] = useState<string>('');
+	const locations = useSelector((state: RootState) => state.weather.locations);
 
 	const toggleSearch = () => {
 		setShowSearch(!showSearch);
-		setLocations([]);
+		setInputValue('');
 	};
 
-	const handleLocation = (loc: Location) => {
-		setLocations([]);
-		setDays(3);
+	const handleLocationSelect = (loc: string) => {
 		toggleSearch();
-		setIsLoading(true);
-		fetchWeatherForecast({ cityName: loc.name, days: 3 })
-			.then(data => {
-				setWeather(data);
-				setIsLoading(false);
-				storage.set('city', loc.name);
-			})
-			.catch(err => {
-				console.log('Error fetching weather data:', err);
-			});
+		dispatch({ type: 'RESET_LOCATIONS' });
+		dispatch(fetchWeather({ cityName: loc.name, days: 3 }));
+		setDays(3);
 	};
 
 	const handleSearch = (value: string) => {
 		if (value.length > 2) {
-			fetchLocations({ cityName: value })
-				.then((res: Location[]) => {
-					if (res.length === 0) {
-						Alert.alert('Alert', 'No locations found', [{ text: 'Continue' }]);
-						return;
-					}
-					setLocations(res);
-				})
-				.catch(err => {
-					console.log('Error fetching locations:', err);
-				});
+			dispatch(fetchLocations({ cityName: value }));
+		} else {
+			dispatch({ type: 'RESET_LOCATIONS' });
 		}
 	};
 
@@ -66,7 +54,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
 			>
 				{showSearch && (
 					<TextInput
-						onChangeText={handleTextDebounce}
+						value={inputValue}
+						onChangeText={text => {
+							setInputValue(text);
+							handleTextDebounce(text);
+						}}
 						placeholder="Search city"
 						placeholderTextColor="lightgray"
 						className="flex-1 pl-6 h-10 text-base text-white"
@@ -80,11 +72,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
 					<MagnifyingGlassIcon size="25" color="white" />
 				</TouchableOpacity>
 			</View>
-			{locations.length > 0 && showSearch && (
-				<View className="absolute w-full bg-gray-300 top-16 rounded-3xl">
-					{locations.map((loc, index) => (
+			{/* Display search results */}
+			{locations?.length > 0 && showSearch && (
+				<ScrollView className="absolute w-full bg-gray-300 top-16 rounded-3xl">
+					{locations?.map((loc, index) => (
 						<TouchableOpacity
-							onPress={() => handleLocation(loc)}
+							onPress={() => handleLocationSelect(loc)}
 							key={index}
 							className={`flex-row items-center p-3 border-0 px-4 mb-1 ${
 								index + 1 !== locations.length
@@ -98,7 +91,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 							</Text>
 						</TouchableOpacity>
 					))}
-				</View>
+				</ScrollView>
 			)}
 		</View>
 	);

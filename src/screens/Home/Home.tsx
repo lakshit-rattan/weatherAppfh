@@ -9,65 +9,45 @@ import {
 	KeyboardAvoidingView,
 	ActivityIndicator,
 	TouchableOpacity,
-	Alert,
 } from 'react-native';
 import { CalendarDaysIcon } from 'react-native-heroicons/solid';
 import {
 	PlusCircleIcon,
 	MinusCircleIcon,
 } from 'react-native-heroicons/outline';
-import { fetchWeatherForecast } from '@/services/api/api';
 import { weatherImages } from '@/services/utils/constants';
 import { ForecastItem, ForecastProp, SearchBar } from '@/components';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import {
+	fetchWeather,
+	loadCachedWeather,
+} from '@/redux/actions/weatherActions';
 import { storage } from '@/storage';
-import { WeatherData } from '@/types/types';
 
 function HomeScreen() {
-	const [weather, setWeather] = useState<WeatherData | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
-	const [days, setDays] = useState(3);
-	const { current, location } = weather || {};
-
-	const fetchData = async (dayCount: number = 3, cityName?: string) => {
-		try {
-			const myCity = cityName || storage.getString('city') || 'Noida';
-			const data = await fetchWeatherForecast({
-				cityName: myCity,
-				days: dayCount,
-			});
-			setWeather(data);
-		} catch (err) {
-			Alert.alert(
-				'Alert',
-				'Error fetching Forecast data. Please restart the app.',
-				[{ text: 'Continue' }],
-			);
-		} finally {
-			setIsLoading(false);
-		}
-	};
+	const dispatch = useDispatch();
+	const [days, setDays] = useState<number>(storage.getNumber('days') || 3);
+	const { forecast, loading } = useSelector(
+		(state: RootState) => state.weather,
+	);
 
 	useEffect(() => {
-		fetchData();
-	}, []);
+		// Default fetch weather for previous stored location or Noida on first load
+		dispatch(loadCachedWeather());
+		storage.set('days', days);
+	}, [dispatch, days]);
 
 	const handleDayChange = (day: number) => {
 		setDays(day);
-		setIsLoading(true); // show loader while new data is fetched
-		fetchData(day, location?.name);
+		dispatch(
+			fetchWeather({
+				cityName: forecast?.location?.name || 'Noida',
+				days: day,
+			}),
+		);
 	};
 
-	// const handleDayChange = day => {
-	// 	setDays(day);
-	// 	fetchWeatherForecast({ cityName: location?.name, days: day })
-	// 		.then(data => {
-	// 			setWeather(data);
-	// 			setIsLoading(false);
-	// 		})
-	// 		.catch(err => {
-	// 			console.log('err', err);
-	// 		});
-	// };
 	return (
 		<ScrollView
 			contentContainerStyle={{ flexGrow: 1 }}
@@ -80,46 +60,42 @@ function HomeScreen() {
 				className="w-full h-full absolute"
 				resizeMode="cover"
 			/>
-			{isLoading ? (
+			{loading ? (
 				<View className="flex-1 flex-row justify-center items-center">
 					<ActivityIndicator size={260} color="white" />
 				</View>
 			) : (
 				<KeyboardAvoidingView className="flex flex-1">
 					<SafeAreaView className="flex flex-1">
-						<SearchBar
-							setWeather={setWeather}
-							setIsLoading={setIsLoading}
-							setDays={setDays}
-						/>
+						<SearchBar setDays={setDays} />
 						<View className="mx-4 flex justify-around flex-1 mb-2">
-							{/* Location */}
 							<Text className="text-white text-center text-2xl font-bold">
-								{location?.name},
+								{forecast?.location?.name},
 								<Text className="text-lg font-semibold text-gray-300">
-									{' ' + location?.country}
+									{' ' + forecast?.location?.country}
 								</Text>
 							</Text>
-							{/* Weather Image */}
 							<View className="flex-row justify-center">
 								<Image
-									source={weatherImages[current?.condition?.text]}
+									source={
+										weatherImages[forecast?.current?.condition?.text] ||
+										weatherImages['Sunny']
+									}
 									className="h-52 w-52"
 								/>
 							</View>
 							{/* Degree Celsius */}
-							<View className="space-y-2 ">
+							<View className="space-y-2">
 								<Text className="text-center font-bold text-white text-6xl ml-5">
-									{current?.temp_c}°
+									{forecast?.current?.temp_c}°
 								</Text>
 								<Text className="text-center text-white text-xl tracking-widest">
-									{current?.condition?.text}
+									{forecast?.current?.condition?.text}
 								</Text>
 							</View>
-							<ForecastProp weather={weather} />
+							<ForecastProp weather={forecast} />
 						</View>
 
-						{/* Forecast section for next days */}
 						<View className="mb-6 space-y-3">
 							<View className="flex-row justify-between">
 								<View className="flex-row items-center mx-5 space-x-2">
@@ -153,7 +129,7 @@ function HomeScreen() {
 								contentContainerStyle={{ paddingHorizontal: 15 }}
 								showsHorizontalScrollIndicator={false}
 							>
-								{weather?.forecast?.forecastday.map((item, index) => (
+								{forecast?.forecast?.forecastday.map((item, index) => (
 									<ForecastItem key={index} item={item} />
 								))}
 							</ScrollView>

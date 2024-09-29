@@ -17,6 +17,7 @@ export const weatherImages = {
 	'other': require('../../theme/assets/images/moderaterain.png'),
 	'Patchy rain nearby': require('../../theme/assets/images/moderaterain.png'),
 	'Mist': require('../../theme/assets/images/mist.png'),
+	'Light drizzle': require('../../theme/assets/images/moderaterain.png'),
 };
 
 export const stringTruncate = (
