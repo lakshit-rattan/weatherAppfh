@@ -18,7 +18,7 @@ function DetailsScreen() {
 	const { day, astro, hour } = forecastDetails;
 
 	return (
-		<ScrollView className="flex-1">
+		<ScrollView contentContainerStyle={{ flexGrow: 1 }} className="flex-1">
 			<StatusBar barStyle="light-content" />
 			<Image
 				blurRadius={70}

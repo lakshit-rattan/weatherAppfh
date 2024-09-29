@@ -1,6 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useCallback, useState } from 'react';
-import { fetchLocations, fetchWeatherForecast } from '@/services/api';
+import { fetchLocations, fetchWeatherForecast } from '@/services/api/api';
 import { debounce } from 'lodash';
 import { MapPinIcon } from 'react-native-heroicons/solid';
 import { MagnifyingGlassIcon } from 'react-native-heroicons/outline';

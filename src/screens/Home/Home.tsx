@@ -16,8 +16,8 @@ import {
 	PlusCircleIcon,
 	MinusCircleIcon,
 } from 'react-native-heroicons/outline';
-import { fetchWeatherForecast } from '@/services/api';
-import { weatherImages } from '@/services/constants';
+import { fetchWeatherForecast } from '@/services/api/api';
+import { weatherImages } from '@/services/utils/constants';
 import { ForecastItem, ForecastProp, SearchBar } from '@/components';
 import { storage } from '@/storage';
 import { WeatherData } from '@/types/types';

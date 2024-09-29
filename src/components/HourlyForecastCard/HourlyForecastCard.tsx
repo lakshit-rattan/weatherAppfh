@@ -1,4 +1,4 @@
-import { stringTruncate } from '@/services/constants';
+import { stringTruncate } from '@/services/utils/constants';
 import { View, Text, Image } from 'react-native';
 
 interface HourlyCondition {
