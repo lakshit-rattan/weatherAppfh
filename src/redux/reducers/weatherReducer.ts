@@ -1,4 +1,4 @@
-import { WeatherData, LocationData } from '@/types/types';
+import { WeatherData, Location } from '@/types/types';
 import { Reducer } from '@reduxjs/toolkit';
 import {
 	FETCH_WEATHER,
@@ -15,7 +15,7 @@ import {
 
 type WeatherState = {
 	forecast: WeatherData | null;
-	locations: LocationData[] | null;
+	locations: Location[];
 	loading: boolean;
 	error: string | null;
 };
@@ -32,7 +32,7 @@ type ActionTypes =
 	| { type: typeof FETCH_WEATHER_SUCCESS; payload: WeatherData }
 	| { type: typeof FETCH_WEATHER_FAILURE; payload: string }
 	| { type: typeof FETCH_LOCATIONS }
-	| { type: typeof FETCH_LOCATIONS_SUCCESS; payload: LocationData[] }
+	| { type: typeof FETCH_LOCATIONS_SUCCESS; payload: Location[] }
 	| { type: typeof FETCH_LOCATIONS_FAILURE; payload: string }
 	| { type: typeof RESET_LOCATIONS }
 	| { type: typeof LOAD_CACHED_WEATHER }

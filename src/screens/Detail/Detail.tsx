@@ -9,6 +9,7 @@ import {
 import { useRoute } from '@react-navigation/native';
 import { AstroCard, ForecastCard, HourlyForecastCard } from '@/components';
 import { ForecastDay } from '@/types/types';
+import styles from './styles';
 
 function DetailsScreen() {
 	const route = useRoute();
@@ -18,7 +19,10 @@ function DetailsScreen() {
 	const { day, astro, hour } = forecastDetails;
 
 	return (
-		<ScrollView contentContainerStyle={{ flexGrow: 1 }} className="flex-1">
+		<ScrollView
+			contentContainerStyle={styles.scrollViewContainer}
+			className="flex-1"
+		>
 			<StatusBar barStyle="light-content" />
 			<Image
 				blurRadius={70}
@@ -27,7 +31,9 @@ function DetailsScreen() {
 			/>
 			<View className="flex-1 p-3">
 				<View
-					style={Platform.OS === 'ios' ? { marginTop: 50 } : undefined}
+					style={
+						Platform.OS === 'ios' ? styles.forecastDateStylesiOS : undefined
+					}
 					className="mb-6"
 				>
 					<Text className="text-white text-2xl font-bold text-center">

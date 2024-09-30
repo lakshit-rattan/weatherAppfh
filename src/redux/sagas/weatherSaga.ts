@@ -1,5 +1,10 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { ForecastParams, LocationParams } from '@/types/types';
+import {
+	ForecastParams,
+	Location,
+	LocationParams,
+	WeatherData,
+} from '@/types/types';
 import { fetchWeatherForecast, fetchLocations } from '@/services/api/api';
 import { Alert } from 'react-native';
 import { storage } from '@/storage';
@@ -20,10 +25,9 @@ import {
 
 function* fetchWeatherSaga(action: { type: string; payload: ForecastParams }) {
 	try {
-		const data = yield call(fetchWeatherForecast, action.payload);
+		const data: WeatherData = yield call(fetchWeatherForecast, action.payload);
 		if (data) {
 			storage.set('lastWeatherData', JSON.stringify(data));
-			storage.set('lastCity', action.payload.cityName);
 			yield put(fetchWeatherSuccess(data));
 		} else {
 			yield put(fetchWeatherFailure('Failed to fetch weather data'));
@@ -43,7 +47,7 @@ function* fetchLocationsSaga(action: {
 	payload: LocationParams;
 }) {
 	try {
-		const locations = yield call(fetchLocations, action.payload);
+		const locations: Location[] = yield call(fetchLocations, action.payload);
 		if (locations.length === 0) {
 			Alert.alert('Alert', 'No locations found', [{ text: 'Continue' }]);
 		} else {
@@ -56,12 +60,8 @@ function* fetchLocationsSaga(action: {
 
 function* loadCachedWeatherSaga() {
 	try {
-		// Check if the last fetched weather data exists in MMKV
-		const lastCity = storage.getString('lastCity');
 		const lastWeatherData = storage.getString('lastWeatherData');
-
-		if (lastCity && lastWeatherData) {
-			// Dispatch the success action with the cached data
+		if (lastWeatherData) {
 			yield put(loadCachedWeatherSuccess(JSON.parse(lastWeatherData)));
 		} else {
 			// If no data is found, default to Noida

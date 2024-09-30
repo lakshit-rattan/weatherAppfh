@@ -24,6 +24,7 @@ import {
 	loadCachedWeather,
 } from '@/redux/actions/weatherActions';
 import { storage } from '@/storage';
+import styles from './styles';
 
 function HomeScreen() {
 	const dispatch = useDispatch();
@@ -50,7 +51,7 @@ function HomeScreen() {
 
 	return (
 		<ScrollView
-			contentContainerStyle={{ flexGrow: 1 }}
+			contentContainerStyle={styles.scrollViewcontainer}
 			className="flex-1 relative bg-black"
 		>
 			<StatusBar barStyle="light-content" />
@@ -87,7 +88,7 @@ function HomeScreen() {
 							{/* Degree Celsius */}
 							<View className="space-y-2">
 								<Text className="text-center font-bold text-white text-6xl ml-5">
-									{forecast?.current?.temp_c}°
+									{forecast?.current?.temp_c}°C
 								</Text>
 								<Text className="text-center text-white text-xl tracking-widest">
 									{forecast?.current?.condition?.text}
@@ -126,7 +127,7 @@ function HomeScreen() {
 							</View>
 							<ScrollView
 								horizontal
-								contentContainerStyle={{ paddingHorizontal: 15 }}
+								contentContainerStyle={styles.forecastScrollView}
 								showsHorizontalScrollIndicator={false}
 							>
 								{forecast?.forecast?.forecastday.map((item, index) => (

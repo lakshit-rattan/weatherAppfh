@@ -2,7 +2,7 @@ import {
 	ForecastParams,
 	LocationParams,
 	WeatherData,
-	LocationData,
+	Location,
 } from '@/types/types';
 import {
 	FETCH_WEATHER,
@@ -14,6 +14,7 @@ import {
 	LOAD_CACHED_WEATHER,
 	LOAD_CACHED_WEATHER_SUCCESS,
 	LOAD_CACHED_WEATHER_FAILURE,
+	RESET_LOCATIONS,
 } from './actionTypes';
 
 export const fetchWeather = (params: ForecastParams) => ({
@@ -36,7 +37,7 @@ export const fetchLocations = (params: LocationParams) => ({
 	payload: params,
 });
 
-export const fetchLocationsSuccess = (data: LocationData[]) => ({
+export const fetchLocationsSuccess = (data: Location[]) => ({
 	type: FETCH_LOCATIONS_SUCCESS,
 	payload: data,
 });
